@@ -7,8 +7,8 @@
 #include <Fonts/FreeSans12pt7b.h>
 
 #define OLED_RESET 0  // GPIO0
-#define SCREEN_WIDTH 128 
-#define SCREEN_HEIGHT 32 
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 32
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -36,7 +36,7 @@ const unsigned char PROGMEM frame19 [] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x
 //hay
 const unsigned char PROGMEM frame30 [] = {0x00, 0x00, 0x00, 0x00, 0x1B, 0x00, 0x7F, 0x01, 0xFF, 0x01, 0xF8, 0x01, 0xF8, 0x02, 0x40, 0x07, 0xE0, 0x3F, 0xE0, 0xFF, 0xC0, 0x7F, 0x80, 0xFC, 0x00, 0x20, 0x00, 0x00, 0x00};
 //Frames of the horse animation
-const uint8_t *startAnim [] = {frame0,frame1,frame2,frame3,frame4,frame5,frame6,frame7,frame8,frame9,frame10,frame11,frame12,frame13,frame14,frame15,frame16,frame17,frame18,frame19};
+const uint8_t *startAnim [] = {frame0, frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10, frame11, frame12, frame13, frame14, frame15, frame16, frame17, frame18, frame19};
 
 //Pin definitons
 int button1_pin = 2;
@@ -58,8 +58,8 @@ int feedingDelay = 1;
 int timerOn = 0;
 int refresh = 1;
 int buttonPressed = 0;
-int selectButton = 0; 
-int confirmButton = 0; 
+int selectButton = 0;
+int confirmButton = 0;
 
 //Counters
 int timerTick = 0;
@@ -83,9 +83,9 @@ void setup() {
   display.clearDisplay();
   display.setFont(&FreeSans9pt7b);
   display.setTextColor(WHITE);
-  display.setCursor(0,0);
+  display.setCursor(0, 0);
   delay(1000);
-  
+
   showStartingAnimation();
   digitalWrite(relay1_pin, HIGH);// (OFF)
   digitalWrite(relay2_pin, HIGH);// (OFF)
@@ -96,133 +96,130 @@ void setup() {
   startMenu();
 }
 
-void startMenu(){
-      Serial.println("startMenu");
-      display.clearDisplay();
-      infoText();
-      tuntiPiirto(feedingInterval);
-      drawHay(relayCount);
+void startMenu() {
+  Serial.println("startMenu");
+  display.clearDisplay();
+  infoText();
+  tuntiPiirto(feedingInterval);
+  drawHay(relayCount);
 }
 
 void loop() {
-    buttonPressed = 0;
-    if(refresh == 1){ //TODO: make prpper refresh a function
-      Serial.println("Refresh screeni");
-      display.clearDisplay();
-      infoText();
-      tuntiPiirto(feedingInterval);
-      drawHay(relayCount - relayInTurn + relayCount);
-      refresh = 0;
-    }
-     
-    selectButton = digitalRead(button1_pin);
-    confirmButton = digitalRead(button2_pin);
+  buttonPressed = 0;
+  if (refresh == 1) { //TODO: make prpper refresh a function
+    Serial.println("Refresh screeni");
+    display.clearDisplay();
+    infoText();
+    tuntiPiirto(feedingInterval);
+    drawHay(relayCount - relayInTurn + relayCount);
+    refresh = 0;
+  }
 
-    // Kun valinta nappia painetaan ja timeri pois päältä
-    if(selectButton == HIGH && timerOn == 0 && buttonPressed == 0){
-      Serial.println("Valintanappia painettu");
+  selectButton = digitalRead(button1_pin);
+  confirmButton = digitalRead(button2_pin);
+
+  // Kun valinta nappia painetaan ja timeri pois päältä
+  if (selectButton == HIGH && timerOn == 0 && buttonPressed == 0) {
+    Serial.println("Valintanappia painettu");
+    buttonPressed = 1;
+    delay(buttonDelay);
+    if (feedingInterval < 6) {
+      feedingInterval = feedingInterval + 1;
+    } else {
+      feedingInterval = 1;
+    }
+    tuntiPiirto(feedingInterval);
+  }
+  // Kun start nappia painetaan ja timeri pois päältä "timerin starttaus"
+  if (timerOn == 0) {
+    if (confirmButton == HIGH && buttonPressed == 0) {
+      Serial.println("Conffianappia painettu");
       buttonPressed = 1;
       delay(buttonDelay);
-        if(feedingInterval < 6){
-          feedingInterval = feedingInterval +1;
-        }else{
-          feedingInterval = 1;    
-        }
-        tuntiPiirto(feedingInterval);
-     }
-    // Kun start nappia painetaan ja timeri pois päältä "timerin starttaus"
-    if(timerOn == 0){
-        if (confirmButton == HIGH && buttonPressed == 0){
-          Serial.println("Conffianappia painettu");
-          buttonPressed = 1;
-          delay(buttonDelay);
-          
-              timerOn = 1;
-              feedingDelay = feedingInterval * 10;
-              relayInTurn = relay1_pin; // go back to first relay
-              refresh = 1;
-              started();
-              delay(feedingDelay);
-        }
-    }
-    // Timer looppi
-    if(timerOn == 1){
-        // Jos timer on päällä ja startti nappia painetaan timer stoppaa asiat nollaantuu
-        if (confirmButton == HIGH && buttonPressed == 0){
-          Serial.println("Conffianappia painettu");
-          buttonPressed = 1;
-          delay(buttonDelay);
-              
-              timerOn = 0;
-              feedingInterval = 1;
-              timerTick = 0;
-              refresh = 1;
-              stopped();
-        }
-        delay(500);
-        
-        timerTick = timerTick + 1;
 
-        timerPiirto(timerTick);
-
-        //TODO: write a relayfunction
-        if(timerTick % feedingDelay == 0){
-          delay(relayDelay);
-          digitalWrite(relayInTurn, LOW);// (ON)
-          Serial.print("rele ");
-          Serial.print(relayInTurn);
-          Serial.println(" paalle ");
-          delay(relayDelay);
-          digitalWrite(relayInTurn, HIGH);//  (OFF)
-          Serial.print("rele ");
-          Serial.print(relayInTurn);
-          Serial.println(" pois ");
-          delay(relayDelay);
-          relayInTurn = relayInTurn + 1;
-          if(relayInTurn < relay1_pin + relayCount  ){       
-            Serial.print("seuraavaksi rele: ");
-            Serial.println(relayInTurn);
-          }else{
-            Serial.print("timer resetoitu relayInTurn");          
-            //TODO: make universalreset
-            //relayInTurn = relay1_pin;
-            timerOn = 0;
-            timerTick = 0;
-          }
-          drawHay(relayCount - relayInTurn + relayCount);
-        }
+      timerOn = 1;
+      feedingDelay = feedingInterval * 10;
+      relayInTurn = relay1_pin; // go back to first relay
+      refresh = 1;
+      started();
+      delay(feedingDelay);
     }
+  }
+  // Timer looppi
+  if (timerOn == 1) {
+    // Jos timer on päällä ja startti nappia painetaan timer stoppaa asiat nollaantuu
+    if (confirmButton == HIGH && buttonPressed == 0) {
+      Serial.println("Conffianappia painettu");
+      buttonPressed = 1;
+      delay(buttonDelay);
+      timerOn = 0;
+      feedingInterval = 1;
+      timerTick = 0;
+      refresh = 1;
+      stopped();
+    }
+    delay(500);
+
+    timerTick = timerTick + 1;
+
+    timerPiirto(timerTick);
+
+    //TODO: write a relayfunction
+    if (timerTick % feedingDelay == 0) {
+      delay(relayDelay);
+      digitalWrite(relayInTurn, LOW);// (ON)
+      Serial.print("rele ");
+      Serial.print(relayInTurn);
+      Serial.println(" paalle ");
+      delay(relayDelay);
+      digitalWrite(relayInTurn, HIGH);//  (OFF)
+      Serial.print("rele ");
+      Serial.print(relayInTurn);
+      Serial.println(" pois ");
+      delay(relayDelay);
+      relayInTurn = relayInTurn + 1;
+      if (relayInTurn < relay1_pin + relayCount  ) {
+        Serial.print("seuraavaksi rele: ");
+        Serial.println(relayInTurn);
+      } else {
+        Serial.print("timer resetoitu");
+        //TODO: make universalreset
+        timerOn = 0;
+        timerTick = 0;
+      }
+      drawHay(relayCount - relayInTurn + relayCount);
+    }
+  }
 }
-
+// Used to only update parts of the info screen by drawing black box on top of old values
 void cleanaQuater(int q) {
-
   switch (q) {
-  case 1:
-    display.fillRect(0, 0, display.width()/2,display.height()/2, SSD1306_BLACK);
-    break;
-  case 2:
-    display.fillRect(display.width()/2, 0, display.width()/2,display.height()/2, SSD1306_BLACK);
-    break;
-      case 3:
-    display.fillRect(0, 18, display.width()/2,display.height()/2, SSD1306_BLACK);        
-    break;
-      case 4:
-    display.fillRect(display.width()/2, 18, display.width()/2,display.height()/2, SSD1306_BLACK);
-    break;
-  default:
-    break;
-    }
-    display.display(); 
-    delay(1);
+    case 1: // top left
+      display.fillRect(0, 0, display.width() / 2, display.height() / 2, SSD1306_BLACK);
+      break;
+    case 2: // top right
+      display.fillRect(display.width() / 2, 0, display.width() / 2, display.height() / 2, SSD1306_BLACK);
+      break;
+    case 3: // bottom left
+      display.fillRect(0, 18, display.width() / 2, display.height() / 2, SSD1306_BLACK);
+      break;
+    case 4: // bottom right
+      display.fillRect(display.width() / 2, 18, display.width() / 2, display.height() / 2, SSD1306_BLACK);
+      break;
+    default:
+      break;
+  }
+  display.display();
+  delay(1);
 }
 
 void drawHay(int n) {
   cleanaQuater(4);
-  display.setCursor(display.width()/2, 32);
-  for(int i = 0; i < n; i++){
+  display.setCursor(display.width() / 2, 32);
+  for (int i = 0; i < n; i++) {
     display.print("# ");
     display.display();
-  }   
+  }
   delay(1);
 }
 
@@ -234,33 +231,23 @@ void infoText(void) {
   delay(1);
 }
 
-void drawCentrer(const String &buf, int x, int y)
-{
-    int16_t x1, y1;
-    uint16_t w, h;
-    display.getTextBounds(buf, x, y, &x1, &y1, &w, &h); //calc width of new string
-    display.setCursor(x - w / 2, y);
-    display.print(buf);
-}
-
 void stopped(void) {
   display.clearDisplay();
-  display.setCursor(0, 15);     // x,y
+  display.setCursor(16, 22);     // x,y
   display.print("STOPPED");
   display.display();
-  delay(100);
+  delay(1000);
 }
 
 void started(void) {
   display.clearDisplay();
-  //display.setCursor(0, 15);     // x,y
-  //display.print("STARTED");
-  drawCentrer("STARTED",64,16);
+  display.setCursor(16, 22);     // x,y
+  display.print("STARTED");
   display.display();
-  delay(100);
+  delay(1000);
 }
 
-void tuntiPiirto(int h){
+void tuntiPiirto(int h) {
   cleanaQuater(2);
   display.setCursor(60, 15);      // x,y
   display.print(h);
@@ -268,22 +255,22 @@ void tuntiPiirto(int h){
   display.display();
   delay(1);
 }
-void timerPiirto(int t){
+void timerPiirto(int t) {
   cleanaQuater(3);
   display.setCursor(15, 31);      // x,y
   display.print(t);
   display.print(" s");
   display.display();
- delay(1);
-  
+  delay(1);
+
 }
 
 //Iterates through the horseAnimation (x,y,frame,w,h,color)
-void showStartingAnimation(){
-  int frameDelay=100;
-  for(int i = 0; i < 20; i++){
-    display.clearDisplay();  
-    display.drawBitmap(0, 0,startAnim[i],display.width(),display.height(), 1);
+void showStartingAnimation() {
+  int frameDelay = 100;
+  for (int i = 0; i < 20; i++) {
+    display.clearDisplay();
+    display.drawBitmap(0, 0, startAnim[i], display.width(), display.height(), 1);
     display.display();
     delay(frameDelay);
   }
