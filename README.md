@@ -34,7 +34,8 @@ The idea came from Mr. J's sister's problem with the task of feeding horses. The
 4. Horse-user selects the feeding interval by pressing the select button.
 5. The sequence is started by pressing the start/stop button.
 6. Feed-O-Pony releases a hay every set time for horses to feats on.
-7. After compartments are empty Feed-O-Pony stops.
+7. Program can be stopped by pressing start/stop button for 5 seconds.
+8. After compartments are empty Feed-O-Pony stops.
 
 
 ## Team
