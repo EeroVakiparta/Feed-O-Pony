@@ -52,6 +52,15 @@ The idea came from Mr. J's sister's problem with the task of feeding horses. The
 * **Eero Vakiparta** - *Initial programming work* - [Feed-O-Pony](https://github.com/EeroVakiparta/Feed-O-Pony)
 * **Mr. J** - *To be determined* 
 
+## Tools
+#### Software
+- Arduino   *-  programming*
+- PyxelEdit   *-  start animation*
+#### Parts list
+- Arduino Nano   *-  runs the logic*
+- I2C 128X32 SSD1306 OLED Display   *-  cheap bright display*
+- 4 Channel Relay Board   *-  to control almost any electronic on/off -device*
+- USB power bank   *- the goal is to make feeder work with normal mobile phone power banks*
 
 ## FAQ
 
