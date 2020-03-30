@@ -10,6 +10,7 @@ Simple horse feeder timer
 - [Example](#example)
 - [Demo](#demo)
 - [Team](#team)
+- [Tools](#tools)
 - [FAQ](#faq)
 
 
