@@ -37,6 +37,7 @@ The idea came from Mr. J's sister's problem with the task of feeding horses. The
 7. Program can be stopped by pressing start/stop button for 5 seconds.
 8. After compartments are empty Feed-O-Pony stops.
 
+![](ponyusage.gif)
 
 ## Team
 
