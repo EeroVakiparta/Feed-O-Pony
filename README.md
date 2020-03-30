@@ -8,6 +8,7 @@ Simple horse feeder timer
 - [Purpose](#purpose)
 - [Challenges](#challenges)
 - [Example](#example)
+- [Demo](#demo)
 - [Team](#team)
 - [FAQ](#faq)
 
