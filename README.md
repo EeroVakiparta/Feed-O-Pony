@@ -40,6 +40,7 @@ The idea came from Mr. J's sister's problem with the task of feeding horses. The
 ![](ponyusage.gif)
 
 ![](Blueprint.jpg)
+Red rectangles represent electromagnetic locks
 
 ## Team
 
