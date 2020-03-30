@@ -38,8 +38,8 @@ The idea came from Mr. J's sister's problem with the task of feeding horses. The
 8. After compartments are empty Feed-O-Pony stops.
 
 ## Demo
--LEDs represent electromagnetic locks controlled by relays
--Electromagnetic locks are show in Blueprint as red rectangles
+- LEDs represent electromagnetic locks controlled by relays
+- Electromagnetic locks are show in Blueprint as red rectangles
 
 ![](ponyusage.gif)
 
