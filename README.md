@@ -58,10 +58,13 @@ The idea came from Mr. J's sister's problem with the task of feeding horses. The
 - Arduino   *-  programming*
 - PyxelEdit   *-  start animation*
 #### Parts list
-- Arduino Nano   *-  runs the logic*
-- I2C 128X32 SSD1306 OLED Display   *-  cheap bright display*
-- 4 Channel Relay Board   *-  to control almost any electronic on/off -device*
-- USB power bank   *- the goal is to make feeder work with normal mobile phone power banks*
+| Name                            | Price | Consumption  |   |   |
+|---------------------------------|-------|--------------|---|---|
+| Arduino Nano                    | 2.6$  | 15 - 18.5mA  |   |   |
+| I2C 128X32 SSD1306 OLED Display | 1.1$  | 4uA - 19.7mA |   |   |
+| 4 Channel Relay Board           | 3$    | 70mA trigger |   |   |
+| USB power bank                  | -     |              |   |   |
+|                                 |       |              |   |   |
 
 ## FAQ
 
