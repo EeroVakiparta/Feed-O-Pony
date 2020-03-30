@@ -10,6 +10,10 @@
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 32
 
+//TODO: Implement LowPower libraries
+// https://www.arduino.cc/en/Tutorial/LowPowerTimedWakeup
+// https://www.arduino.cc/en/Tutorial/LowPowerExternalWakeup
+
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 //Start animation
