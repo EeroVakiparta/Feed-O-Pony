@@ -39,7 +39,7 @@ The idea came from Mr. J's sister's problem with the task of feeding horses. The
 
 ![](ponyusage.gif)
 
-![](blueprint.jpg)
+![](Blueprint.jpg)
 
 ## Team
 
