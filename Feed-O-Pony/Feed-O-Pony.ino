@@ -5,14 +5,11 @@
 #include <Fonts/FreeSans9pt7b.h>
 #include <Fonts/FreeSans18pt7b.h>
 #include <Fonts/FreeSans12pt7b.h>
+#include "LowPower.h"
 
 #define OLED_RESET 0  // GPIO0
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 32
-
-//TODO: Implement LowPower libraries
-// https://www.arduino.cc/en/Tutorial/LowPowerTimedWakeup
-// https://www.arduino.cc/en/Tutorial/LowPowerExternalWakeup
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -43,12 +40,12 @@ const unsigned char PROGMEM frame30 [] = {0x00, 0x00, 0x00, 0x00, 0x1B, 0x00, 0x
 const uint8_t *startAnim [] = {frame0, frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10, frame11, frame12, frame13, frame14, frame15, frame16, frame17, frame18, frame19};
 
 //Pin definitons
-int button1_pin = 2;
-int button2_pin = 3;
-int relay1_pin = 4;
-int relay2_pin = 5;
-int relay3_pin = 6;
-int relay4_pin = 7;
+const int button1_pin = 2;
+const int button2_pin = 3;
+const int relay1_pin = 4;
+const int relay2_pin = 5;
+const int relay3_pin = 6;
+const int relay4_pin = 7;
 
 //Delays
 int relayDelay = 500;
@@ -109,6 +106,7 @@ void startMenu() {
 }
 
 void loop() {
+  attachInterrupt(0, confirmButton, HIGH);
   buttonPressed = 0;
   if (refresh == 1) { //TODO: make prpper refresh a function
     Serial.println("Refresh screeni");
@@ -162,7 +160,8 @@ void loop() {
       refresh = 1;
       stopped();
     }
-    delay(500);
+      LowPower.idle(SLEEP_8S, ADC_OFF, TIMER2_OFF, TIMER1_OFF, TIMER0_OFF, 
+                SPI_OFF, USART0_OFF, TWI_OFF);
 
     timerTick = timerTick + 1;
 
@@ -190,6 +189,8 @@ void loop() {
         //TODO: make universalreset
         timerOn = 0;
         timerTick = 0;
+        LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF); 
+        detachInterrupt(0); 
       }
       drawHay(relayCount - relayInTurn + relayCount);
     }
@@ -253,7 +254,7 @@ void started(void) {
 
 void tuntiPiirto(int h) {
   cleanaQuater(2);
-  display.setCursor(60, 15);      // x,y
+  display.setCursor(70, 15);      // x,y
   display.print(h);
   display.print("0 s");
   display.display();
