@@ -5,7 +5,6 @@
 #include <Fonts/FreeSans9pt7b.h>
 #include <Fonts/FreeSans18pt7b.h>
 #include <Fonts/FreeSans12pt7b.h>
-#include "LowPower.h"
 
 #define OLED_RESET 0  // GPIO0
 #define SCREEN_WIDTH 128
@@ -46,6 +45,7 @@ const int relay1_pin = 4;
 const int relay2_pin = 5;
 const int relay3_pin = 6;
 const int relay4_pin = 7;
+const int tonePin = 8;
 
 //Delays
 int relayDelay = 500;
@@ -76,6 +76,7 @@ void setup() {
   pinMode(relay2_pin, OUTPUT);
   pinMode(relay3_pin, OUTPUT);
   pinMode(relay4_pin, OUTPUT);
+  pinMode(tonePin, OUTPUT);
 
   //Screen setup
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
@@ -94,6 +95,7 @@ void setup() {
   digitalWrite(relay4_pin, HIGH);// (OFF)
   delay(10);
   Serial.println("Feed-P-Pony ready!");
+  stableSound();
   startMenu();
 }
 
@@ -106,7 +108,6 @@ void startMenu() {
 }
 
 void loop() {
-  attachInterrupt(0, confirmButton, HIGH);
   buttonPressed = 0;
   if (refresh == 1) { //TODO: make prpper refresh a function
     Serial.println("Refresh screeni");
@@ -160,8 +161,7 @@ void loop() {
       refresh = 1;
       stopped();
     }
-      LowPower.idle(SLEEP_8S, ADC_OFF, TIMER2_OFF, TIMER1_OFF, TIMER0_OFF, 
-                SPI_OFF, USART0_OFF, TWI_OFF);
+      delay(1000);
 
     timerTick = timerTick + 1;
 
@@ -189,7 +189,7 @@ void loop() {
         //TODO: make universalreset
         timerOn = 0;
         timerTick = 0;
-        LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF); 
+       
         detachInterrupt(0); 
       }
       drawHay(relayCount - relayInTurn + relayCount);
@@ -279,4 +279,34 @@ void showStartingAnimation() {
     display.display();
     delay(frameDelay);
   }
+}
+void stableSound(){
+    tone(tonePin, 233, 428.571);
+    delay(428.571);    
+    tone(tonePin, 311, 428.571);
+    delay(428.571);    
+    tone(tonePin, 369, 857.142);
+    delay(857.142);   
+    tone(tonePin, 349, 857.142);
+    delay(857.142);   
+    tone(tonePin, 233, 428.571);
+    delay(428.571);    
+    tone(tonePin, 311, 428.571);
+    delay(428.571);    
+    tone(tonePin, 415, 857.142);
+    delay(857.142);    
+    tone(tonePin, 369, 857.142);
+    delay(857.142);   
+    tone(tonePin, 349, 428.571);
+    delay(428.571);    
+    tone(tonePin, 311, 428.571);
+    delay(428.571);  
+    tone(tonePin, 277, 428.571);
+    delay(428.571);    
+    tone(tonePin, 311, 428.571);
+    delay(428.571);    
+    tone(tonePin, 349, 857.142);
+    delay(857.142);    
+    tone(tonePin, 311, 1628.568);
+    delay(1628.568);
 }
