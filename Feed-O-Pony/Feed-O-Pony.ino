@@ -281,32 +281,16 @@ void showStartingAnimation() {
   }
 }
 void stableSound(){
-    tone(tonePin, 233, 428.571);
-    delay(428.571);    
-    tone(tonePin, 311, 428.571);
-    delay(428.571);    
-    tone(tonePin, 369, 857.142);
-    delay(857.142);   
-    tone(tonePin, 349, 857.142);
-    delay(857.142);   
-    tone(tonePin, 233, 428.571);
-    delay(428.571);    
-    tone(tonePin, 311, 428.571);
-    delay(428.571);    
-    tone(tonePin, 415, 857.142);
-    delay(857.142);    
-    tone(tonePin, 369, 857.142);
-    delay(857.142);   
-    tone(tonePin, 349, 428.571);
-    delay(428.571);    
-    tone(tonePin, 311, 428.571);
-    delay(428.571);  
-    tone(tonePin, 277, 428.571);
-    delay(428.571);    
-    tone(tonePin, 311, 428.571);
-    delay(428.571);    
-    tone(tonePin, 349, 857.142);
-    delay(857.142);    
-    tone(tonePin, 311, 1628.568);
-    delay(1628.568);
+  //TODO: make consts after decided how to do this 
+  int songSpeed = 1.1;
+  int e = 400 * songSpeed;
+  int f = 800 * songSpeed;
+  int h = 1600 * songSpeed;
+  int notes[14] = {233,311,369,349,233,311,415,369,349,311,277,311,349,311};
+  int len[14] = {e,e,f,f,e,e,f,f,e,e,e,e,f,h};
+
+  for (byte i = 0; i < 14; i = i + 1) {
+    tone(tonePin,notes[i],len[i]);
+    delay(len[i]);
+  }
 }
