@@ -17,6 +17,8 @@ Simple horse feeder timer
 ## Purpose
 
 The idea came from Mr. J's sister's problem with the task of feeding horses. Them ponies are far away on their field and the trip would take unreasonably long to be taken many times a day. Commercial products for the purpose are quite costly. This initiated our challenge to make one of our own.
+> NOTE: I got contacted by lovely German fellow who is trying to tackle a similar problem. If you have access to mains power, you might be more interested in his approach. 
+https://github.com/EnsignCrasher/OpenHorseFeeder 
 
 
 ## Challenges
