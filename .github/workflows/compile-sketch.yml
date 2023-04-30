@@ -5,7 +5,7 @@ on:
   - pull_request
 
 jobs:
-  compile-sketch:
+  compile-arduino:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,9 +25,41 @@ jobs:
           arduino-cli lib install "Adafruit GFX Library"
           arduino-cli lib install "Adafruit SSD1306"
 
-      - name: Compile sketch
+      - name: Compile Arduino Uno sketch
         uses: arduino/compile-sketches@v1
         with:
-          sketch-paths: |
-            - ./
+          sketch-paths: Feed-O-Pony/
           fqbn: arduino:avr:uno
+
+  compile-esp32:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup arduino-cli
+        uses: arduino/setup-arduino-cli@v1
+
+      - name: Add ESP32 board manager URL
+        run: |
+          arduino-cli config init
+          echo "board_manager:" >> ~/.arduino15/arduino-cli.yaml
+          echo "  additional_urls: [https://dl.espressif.com/dl/package_esp32_index.json]" >> ~/.arduino15/arduino-cli.yaml
+
+      - name: Update board index
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+
+      - name: Install external libraries
+        run: |
+          arduino-cli lib install "AsyncTCP"
+          git clone https://github.com/me-no-dev/ESPAsyncWebServer.git
+          mv ESPAsyncWebServer ~/Arduino/libraries/ESPAsyncWebServer
+
+      - name: Compile ESP32 sketch
+        uses: arduino/compile-sketches@v1
+        with:
+          sketch-paths: Feed-O-Pony-2/
+          fqbn: esp32:esp32:esp32
